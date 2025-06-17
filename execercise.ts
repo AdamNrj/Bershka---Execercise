@@ -1,4 +1,9 @@
-const categories = [
+type Category = {
+    name: string;
+    subcategories: Category[];
+};
+
+const categories: Category[] = [
     {
         name: 'category1',
         subcategories: [
@@ -23,12 +28,27 @@ const categories = [
     }
 ];
 
-// TO-DO: Implement this function
-const getCategoryPath = (categories, categoryName) => {
-    let path;
+const getCategoryPath = (categoryList: Category[], categoryName: string): string | null => {
+    let foundPath: Array<string> = [];
 
+    const explore = (groups: Category[], trail: string[]): boolean => {
+        for (const group of groups) {
+            const currentTrail = [...trail, group.name];
 
-    return path;
+            if (group.name === categoryName) {
+                foundPath = currentTrail;
+                return true;
+            }
+
+            if (group.subcategories.length > 0 && explore(group.subcategories, currentTrail)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    const found = explore(categoryList, []);
+    return found ? '/' + foundPath.join('/') : null;
 };
 
 // OUTPUT SAMPLES
